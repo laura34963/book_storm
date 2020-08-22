@@ -1,5 +1,13 @@
 class Api::V1::StoreController < Api::ApplicationController
 
+  def update
+    if @store.update(store_params)
+      success_response(@store.display_info)
+    else
+      error_response(:update_store_failed)
+    end
+  end
+  
   def popular_rank
     if params[:popular_type] == 'earning'
       stores = Store.most_earning
@@ -36,5 +44,11 @@ class Api::V1::StoreController < Api::ApplicationController
 
     success_response(stores.pluck(:name))
   end
-  
+
+  private
+
+  def store_params
+    params.permit(:name, :balance)
+  end
+
 end

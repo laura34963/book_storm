@@ -3,12 +3,14 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      namespace :store do
-        get 'popular_rank'
-        get 'search'
-        get 'search_open'
-        get 'search_hour'
-        get 'search_book_count'
+      resources :store, only: [:update] do
+        collection do
+          get 'popular_rank'
+          get 'search'
+          get 'search_open'
+          get 'search_hour'
+          get 'search_book_count'
+        end
       end
 
       resources :book do
