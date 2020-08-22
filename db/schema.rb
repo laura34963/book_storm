@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_22_012847) do
+ActiveRecord::Schema.define(version: 2020_08_22_025102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "books", force: :cascade do |t|
+    t.integer "store_id"
     t.string "name"
     t.decimal "price"
     t.datetime "created_at", precision: 6, null: false
@@ -40,12 +41,19 @@ ActiveRecord::Schema.define(version: 2020_08_22_012847) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "user_tokens", force: :cascade do |t|
+    t.string "token"
+    t.integer "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "users", force: :cascade do |t|
-    t.integer "store_id"
     t.string "name"
     t.decimal "balance"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "password", default: "default_pwd"
   end
 
 end
