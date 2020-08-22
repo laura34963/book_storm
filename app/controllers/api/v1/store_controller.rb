@@ -11,7 +11,7 @@ class Api::V1::StoreController < Api::ApplicationController
   end
 
   def search
-    store_names = Store.most_relevant(params[:search_terms].split(' '))
+    store_names = Store.most_relevant(params[:keyword].split(' '))
 
     success_response(stores: store_names)
   end

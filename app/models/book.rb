@@ -15,6 +15,13 @@ class Book < ApplicationRecord
       operator = filter_type_to_operator(filter_type)
       Book.select(:store_id, 'count(*)').group(:store_id).having("count(*) #{operator} #{book_count}").pluck(:store_id)
     end
+
+    def most_relevant(search_terms)
+      select_text = format_relevant_select_text('name', search_terms)
+      total_text = format_total_text(search_terms)
+      stores = ActiveRecord::Base.connection.execute("select name, #{total_text} from (#{select_text} from stores) as count_table order by total desc")
+      stores.pluck(:name)
+    end
     
 
   end

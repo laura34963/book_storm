@@ -13,8 +13,8 @@ class User < ApplicationRecord
     end
 
     def spend_most
-      user_ids = PurchaseHistory.select(:user_id, 'sum(amount)').group(:user_id).order('sum(amount) desc')
-      User.where(id: user_ids)
+      user_ids = PurchaseHistory.select(:user_id, 'sum(amount)').group(:user_id).order('sum(amount) desc').pluck(:user_id)
+      User.where(id: user_ids).sort_by{|user| user_ids.index(user.id)}
     end
 
     def list_cost(filter_type, price, date_range)
