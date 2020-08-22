@@ -19,8 +19,8 @@ class Book < ApplicationRecord
     def most_relevant(search_terms)
       select_text = format_relevant_select_text('name', search_terms)
       total_text = format_total_text(search_terms)
-      books = ActiveRecord::Base.connection.execute("select name, #{total_text} from (#{select_text} from books) as count_table order by total desc")
-      books.pluck(:name)
+      books = ActiveRecord::Base.connection.execute("select name, #{total_text} from (#{select_text} from books) as count_table order by total desc").collect
+      books.pluck('name')
     end
     
 

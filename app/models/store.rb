@@ -14,9 +14,8 @@ class Store < ApplicationRecord
     def most_relevant(search_terms)
       select_text = format_relevant_select_text('name', search_terms)
       total_text = format_total_text(search_terms)
-      stores = ActiveRecord::Base.connection.execute("select name, #{total_text} from (#{select_text} from stores) as count_table order by total desc")
-      binding.pry
-      stores.pluck(:name)
+      stores = ActiveRecord::Base.connection.execute("select name, #{total_text} from (#{select_text} from stores) as count_table order by total desc").collect
+      stores.pluck('name')
     end
 
     def most_transation
@@ -32,7 +31,6 @@ class Store < ApplicationRecord
     def list_open_hour_per_day(filter_type, hour)
       operator = filter_type_to_operator(filter_type)
       store_ids = BusinessHour.where("open_hour #{operator} #{hour}").pluck(:store_id).uniq
-      puts store_ids
       Store.where(id: store_ids)
     end
 
