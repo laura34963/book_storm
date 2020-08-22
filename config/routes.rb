@@ -22,7 +22,9 @@ Rails.application.routes.draw do
       end
       
       resources :user, only: [:create, :update] do
-        post 'login'
+        collection do
+          post 'login'
+        end
       end
 
       namespace :transaction do

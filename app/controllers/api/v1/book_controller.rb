@@ -5,7 +5,7 @@ class Api::V1::BookController < Api::ApplicationController
   before_action :check_purchase, only: [:purchase]
 
   def index
-    success_respnose(@store.books.as_json)
+    success_response(@store.books.as_json)
   end
 
   def show
@@ -14,7 +14,7 @@ class Api::V1::BookController < Api::ApplicationController
 
   def create
     if book = Book.create(book_params)
-      success_respnose(book.as_json)
+      success_response(book.as_json)
     else
       error_response(:create_book_failed)
     end
@@ -22,7 +22,7 @@ class Api::V1::BookController < Api::ApplicationController
 
   def update
     if @book.update(book_params)
-      success_respnose(book.as_json)
+      success_response(@book.as_json)
     else
       error_response(:update_book_failed)
     end
@@ -51,7 +51,9 @@ class Api::V1::BookController < Api::ApplicationController
   end
 
   def search
-    
+    book_names = Book.most_relevant(params[:keyword].split(' '))
+
+    success_response(books: book_names)
   end
 
   private
@@ -61,8 +63,8 @@ class Api::V1::BookController < Api::ApplicationController
   end
 
   def check_purchase
-    @book_num = params[:book_num] || 1
-    error_respnose(:not_enough_balance) if @user.balance < (@book.price * book_num)
+    @book_num = params[:book_num]&.to_i || 1
+    error_response(:not_enough_balance) if @user.balance < (@book.price * @book_num)
   end
 
 end

@@ -14,7 +14,7 @@ class Api::ApplicationController < ApplicationController
     render status: 200, json: {data: data}
   end
   
-  def error_respnose(error_key, error_message=nil)
+  def error_response(error_key, error_message=nil)
     render_content = ErrorResponse.to_api(error_key, error_message)
     render render_content
   end
@@ -30,18 +30,18 @@ class Api::ApplicationController < ApplicationController
   end
 
   def set_user
-    token = UserToken.find(token: params[:token])
+    token = UserToken.find_by(token: params[:token])
     error_response(:token_not_found) if token.nil?
     @user = token.user
   end
 
   def set_book
-    @book = Book.find_by_id(params[:book_id])
+    @book = Book.find_by_id(params[:book_id] || params[:id])
     error_response(:book_not_found) if @book.nil?
   end
 
   def set_store
-    @store = Store.find_by_id(params[:store_id])
+    @store = Store.find_by_id(params[:store_id] || params[:id])
     error_response(:store_not_found) if @store.nil?
   end
   

@@ -23,7 +23,7 @@ class Api::V1::UserController < Api::ApplicationController
     info = User.login(params[:name], params[:password])
 
     if info.present?
-      success_response(:info)
+      success_response(info)
     else
       error_response(:login_failed)
     end

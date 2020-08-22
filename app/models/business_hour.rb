@@ -23,7 +23,7 @@ class BusinessHour < ApplicationRecord
     open_datetime = DateTime.parse(display_time(opentime))
     close_datetime = DateTime.parse(display_time(closetime))
     close_datetime += 7.days if close_datetime < open_datetime
-    self.open_hour = (close_datetime - open_datetime) * 1.0 / 60 / 60
+    self.open_hour = (close_datetime.to_i - open_datetime.to_i) * 1.0 / 60 / 60
   end
 
   def display_time(time)
