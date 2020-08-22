@@ -8,16 +8,11 @@ class Api::V1::TransactionController < Api::ApplicationController
     success_response(count)
   end
   
-  def count
-    count = PurchaseHistory.purchase_within(@date_range).count
-  
-    success_response(count)
-  end
-
-  def total_amount
+  def sales_situation
+    sales_num = PurchaseHistory.purchase_within(@date_range).count
     total_amount = PurchaseHistory.purchase_within(@date_range).sum(:amount)
-
-    success_response(total_amount)
+  
+    success_response(sales_num: sales_num, total_amount: total_amount)
   end
   
 end

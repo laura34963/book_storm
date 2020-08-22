@@ -11,7 +11,10 @@ class Store < ApplicationRecord
     end
 
     def most_relevant(search_terms)
-      
+      select_text = format_relevant_select_text('name', search_terms)
+      total_text = format_total_text(search_terms)
+      stores = ActiveRecord::Base.connection.execute("select name, #{total_text} from (#{select_text} from stores) as count_table order by total desc")
+      stores.pluck(:name)
     end
 
     def most_transation
@@ -26,15 +29,20 @@ class Store < ApplicationRecord
 
     def list_open_hour_per_day(filter_type, hour)
       operator = filter_type_to_operator(filter_type)
+      store_ids = BusinessHour.where("open_hour #{operator} #{hour}").pluck(:store_id).uniq
+      Store.where(id: store_ids)
     end
 
     def list_open_hour_per_week(filter_type, hour)
       operator = filter_type_to_operator(filter_type)
+      store_ids = BusinessHour.select(:store_id, 'sum(open_hour)').group(:store_id).having("sum(open_hour) #{operator} #{hour}").pluck(:store_id).uniq
+      Store.where(id: store_ids)
     end
 
-    def list_book_count(filter_type, book_count)
-      store_ids = Book.store_ownen_count_match(filter_type, book_count)
-      Store.where(id: store_ids)
+    def list_book_count(filter_type, book_count, min_price=nil, max_price=nil)
+      books = min_price.present? && max_price.present? ? Book.price_between(min_price, max_price) : Book
+      store_ids = books.store_ownen_count_match(filter_type, book_count)
+      Store.where(id: store_ids).sort_by{|store| store_ids.index(store.id)}
     end
     
   end
@@ -47,8 +55,18 @@ class Store < ApplicationRecord
 
   private
   
-  def format_relevant_sql(col_name, search_terms)
-    
+  def format_relevant_select_text(col_name, search_terms)
+    select_query = search_terms.map do |term|
+      "(length(#{col_name}) - length(regexp_replace(#{col_name}, '#{term}', 'g'))) / length(#{term}) as #{term}_count"
+    end.join(', ')
+    "select #{col_name}, #{select_query}"
   end
-  
+
+  def format_total_text(search_terms)
+    total_text = search_terms.map do |term|
+      "#{term}_count"
+    end.join('+')
+    "(#{total_text}) as total"
+  end
+
 end

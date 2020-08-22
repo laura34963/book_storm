@@ -25,8 +25,7 @@ Rails.application.routes.draw do
 
       namespace :transaction do
         get 'user_count_by_cost'
-        get 'count'
-        get 'total_amount'
+        get 'sales_situation'
       end
     end
   end

@@ -29,6 +29,12 @@ class Api::V1::UserController < Api::ApplicationController
     end
   end
 
+  def purchase_rank
+    users = User.spend_most
+
+    success_response(users.pluck(:name))
+  end
+
   private
 
   def user_params
