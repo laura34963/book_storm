@@ -1,0 +1,39 @@
+need_more_infomation:
+  error_code: 400_400
+  error_message: need more infomation
+not_enough_balance:
+  error_code: 400_401
+  error_message: user not have enough balance
+login_failed:
+  error_code: 401_001
+  error_message: user login failed
+book_not_found:
+  error_code: 404_001
+  error_message: book not found
+store_not_found:
+  error_code: 404_002
+  error_message: store not found
+user_not_found:
+  error_code: 404_003
+  error_message: user not found
+create_book_failed:
+  error_code: 406_001
+  error_message: create book failed
+update_book_failed:
+  error_code: 406_002
+  error_message: update book failed
+create_user_failed:
+  error_code: 406_003
+  error_message: create user failed
+update_user_failed:
+  error_code: 406_004
+  error_message: update user failed
+delete_book_failed:
+  error_code: 406_003
+  error_message: delete book failed
+purchase_failed:
+  error_code: 406_004
+  error_message: purchase failed
+internal_server_error:
+  error_code: 500_000
+  error_message: internal server error
